@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Homepage from './pages/Homepage';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
+import './App.css';
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+
 
 function App() {
-
   return (
-    <div>
+    <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/signup" element={<Signup/>} />
-          <Route path="/login" element={<Login/>}/>
+          <Route path='/' element={<Navigate to="/login" />}/>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </BrowserRouter>
     </div>

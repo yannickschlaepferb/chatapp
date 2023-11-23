@@ -1,38 +1,90 @@
 const express = require('express');
-const mariadb = require('mariadb');
-require('dotenv').config();
 const app = express();
-const port = process.env.PORT || 3000;
+const mysql = require('mysql2');
+const bodyParser = require('body-parser');
+const cors = require("cors");
+const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
 
-app.use(express.json()); 
+dotenv.config();
 
-const pool = mariadb.createPool({
-  host: 'your_database_host',
-  user: 'your_db_user',
-  password: 'your_db_password',
-  database: 'your_database_name',
-});
+const port = 3000;
 
-// Route for user login
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  const conn = await pool.getConnection();
-  try {
-    const result = await conn.query("SELECT * FROM users WHERE email = ? AND password = ?", [email, password]);
-    if (result.length > 0) {
-      res.status(200).json({ message: 'Login successful' });
-    } else {
-      res.status(401).json({ message: 'Login failed. Incorrect credentials.' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  } finally {
-    conn.release();
-  }
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+    console.log(`Server is running on port ${port}`);
+  });
+
+app.use(cors({
+    origin : ["http://localhost:3001"],
+    methods : ["GET", "POST", "DELETE"],
+    credentials: true,
+  }))
+
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT)
+  })
+
+pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error connecting to database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to database ');
+  });
+
+  app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+  
+    pool.execute("SELECT username, password FROM users WHERE username = ?", [username], (err, results) => {
+      if (err) {
+        console.error('Error during login:', err);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+  
+      if (results.length === 0) {
+        return res.status(401).json({ success: false, message: 'Invalid username or password' });
+      }
+  
+      const user = results[0];
+  
+      bcrypt.compare(password, user.password, (err, isValid) => {
+        if (err) {
+          console.error('Error during password comparison:', err);
+          return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+  
+        if (!isValid) {
+          return res.status(401).json({ success: false, message: 'Invalid username or password' });
+        }
+
+        res.json({ success: true, message: 'Login successful', userId: user.id });
+      });
+    });
+  });
+  
+
+  //SIGNUP
+  app.post("/signup", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    bcrypt.hash(password, saltRound, (err, hash) => {
+      if(err) {
+        console.log(err)
+      }
+      pool.execute("INSERT INTO users (username, password) VALUES (?,?)", [username, hash],
+      (err, result) => {
+        console.log(err);
+      })
+      res.json({ success: true, message: 'User created successfully' });
+    })
+  });
+
+
