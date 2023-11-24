@@ -1,25 +1,45 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useUser } from '../components/Usercontext';
+import './Login.css'
+import ErrorPopup from "../components/Errorpopup";
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    //const navigate = useNavigate();
+    const [error, setError] = useState('');
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useUser();
 
     const handlelogin = async () => {
-        try {
-          const response = await axios.post('http://localhost:3000/login', { username, password });
-          console.log('login successful:', response.data);
-          //setTimeout(() => {
-            //navigate("/chatroom");
-          //}, 10)
-        } catch (error) {
-          console.log('login failed:', error);
+      try {
+        if (!username || !password){
+          setError('Please fill in all fieds')
+          setShowErrorPopup(true);
+          return;
         }
+        const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
+        console.log('login successful:', response.data);
+        login();
+        setTimeout(() => {
+          navigate("/vault");
+        }, 10)
+      } catch (error) {
+        console.log('login failed:', error);
+        setError('login failed');
+        setShowErrorPopup(true);
       }
+    }
+  
+    const closeErrorPopup = () => {
+      console.log('close popup')
+      setShowErrorPopup(false);
+    }
+    
 
 
   return (
@@ -44,6 +64,9 @@ function Login() {
               <button className="signup-btn">Create a new account</button>
               </div>
             </Link>
+        </div>
+        <div>
+          {showErrorPopup && <ErrorPopup message={error} onClose={closeErrorPopup} />}
         </div>
     </div>
   );

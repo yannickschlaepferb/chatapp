@@ -5,21 +5,21 @@ const bodyParser = require('body-parser');
 const cors = require("cors");
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const { Server } = require("socket.io");
+const http = require("http");
+const server = http.createServer(app);
+const io = new Server(server);
 
 dotenv.config();
 
 const port = 3000;
+const saltRound = 10;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-
 app.use(cors({
-    origin : ["http://localhost:3001"],
-    methods : ["GET", "POST", "DELETE"],
+    origin : "http://localhost:3001",
     credentials: true,
   }))
 
@@ -31,7 +31,7 @@ const pool = mysql.createPool({
     connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT)
   })
 
-pool.getConnection((err, connection) => {
+  pool.getConnection((err, connection) => {
     if (err) {
       console.error('Error connecting to database: ' + err.stack);
       return;
@@ -72,6 +72,7 @@ pool.getConnection((err, connection) => {
 
   //SIGNUP
   app.post("/signup", (req, res) => {
+    console.log("here");
     const username = req.body.username;
     const password = req.body.password;
 
@@ -82,9 +83,34 @@ pool.getConnection((err, connection) => {
       pool.execute("INSERT INTO users (username, password) VALUES (?,?)", [username, hash],
       (err, result) => {
         console.log(err);
+        console.log(result);
       })
       res.json({ success: true, message: 'User created successfully' });
     })
   });
 
+
+  
+/*io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("message_send", async (message, chat, sender) => {
+    try {
+      const sendMsg = await sendMessage(message, chat, sender);
+      if (sendMsg.success) {
+        io.in(chat).emit("message_new");
+      } else {
+        io.in(chat).emit(`message_error_${sender}`, sendMsg.message);
+      }
+    } catch (error) {
+      console.log(error);
+      io.in(chat).emit(`message_error_${sender}`, error);
+    }
+  });
+});*/
+
+
+server.listen(port, () => {
+  console.log(`Server listening on Port: ${port}`);
+});
 
