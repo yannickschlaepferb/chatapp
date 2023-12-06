@@ -20,7 +20,7 @@ function Signup(){
             return;
           }
     
-          const response = await axios.post('http://localhost:3000/signup', { username, password });
+          const response = await axios.post('http://localhost:3001/signup', { username, password });
           console.log('user created successfully:', response.data);
           setTimeout(() => {
             navigate("/login");

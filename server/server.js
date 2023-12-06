@@ -8,13 +8,9 @@ const bcrypt = require("bcrypt");
 const http = require("http");
 
 dotenv.config();
-
-const port = 3000;
 const saltRound = 10;
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
 
 app.use(cors({
   origin : ["http://localhost:3001"],
@@ -109,4 +105,8 @@ app.post("/signup", (req, res) => {
     );
     res.json({ success: true, message: "User created successfully" });
   });
+});
+
+app.listen(3001, () => {
+  console.log("Server is running on port 3001");
 });
