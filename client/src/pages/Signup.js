@@ -24,7 +24,6 @@ function Signup(){
         }
       }
 
-
     return(
         <div>
             <h1 className="title">Signup</h1>
