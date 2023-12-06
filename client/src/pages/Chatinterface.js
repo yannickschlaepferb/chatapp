@@ -31,6 +31,7 @@ function Chat() {
         roomId: roomId,
       });
 
+      
       console.log("Response from server:", response.data);
       console.log(`User ${addUsername} added to Room ${roomId} successfully`);
     } catch (error) {
