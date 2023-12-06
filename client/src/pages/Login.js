@@ -24,16 +24,22 @@ function Login() {
       }
       const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
       console.log('login successful:', response.data);
-      login();
-      //setTimeout(() => {
-        //navigate("/Createroomform");
-      //}, 10)
+      
+      if (response.data.success) {
+        const { userId } = response.data;
+        login();
+        //setUserId(userId);
+        navigate(`/room/${username}/${userId}`);
+      } else {
+        setError('Invalid username or password');
+        setShowErrorPopup(true);
+      }
     } catch (error) {
-      console.log('login failed:', error);
-      setError('login failed');
+      console.error('Login failed:', error);
+      setError('Login failed');
       setShowErrorPopup(true);
     }
-  }
+  };
 
   const closeErrorPopup = () => {
     console.log('close popup')
@@ -64,7 +70,7 @@ function Login() {
         </div>
         <div className="login-btn-container">
           <button onClick={handlelogin} className="login-btn">
-            Enter
+            log in
           </button>
         </div>
       </div>
