@@ -1,5 +1,5 @@
-CREATE DATABASE chatappdb;
-USE chatappdb;
+CREATE DATABASE Chatapp;
+USE Chatapp;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,

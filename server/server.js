@@ -5,36 +5,22 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
-const { Server } = require("socket.io");
 const http = require("http");
-
-const io = new Server(server);
-
-const server = http.createServer(app);
 
 dotenv.config();
 
 const port = 3000;
 const saltRound = 10;
 
-server.listen(port, () => {
-  console.log(`Server listening on Port: ${port}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
-app.use(
-  cors({
-    origin: "http://localhost:3001",
-    credentials: true,
-  })
-);
-
-io.on("connection", (socket) => {
-  console.log("socket.id");
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-  });
-}); 
+app.use(cors({
+  origin : ["http://localhost:3001"],
+  methods : ["GET", "POST", "DELETE"],
+  credentials: true,
+}))
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,6 +34,8 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE,
   connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT),
 });
+
+
 
 pool.getConnection((err, connection) => {
   if (err) {
