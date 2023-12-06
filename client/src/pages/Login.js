@@ -1,75 +1,34 @@
-import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useUser } from '../components/Usercontext';
-import './Login.css'
-import ErrorPopup from "../components/Errorpopup";
+import './css/Login.css'
+
 
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [showErrorPopup, setShowErrorPopup] = useState(false);
-    const navigate = useNavigate();
-    const { login } = useUser();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handlelogin = async () => {
-      try {
-        if (!username || !password){
-          setError('Please fill in all fieds')
-          setShowErrorPopup(true);
-          return;
-        }
-        const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
-        console.log('login successful:', response.data);
-        login();
-        setTimeout(() => {
-          navigate("/vault");
-        }, 10)
-      } catch (error) {
-        console.log('login failed:', error);
-        setError('login failed');
-        setShowErrorPopup(true);
-      }
+  const login = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/login', { username, password });
+      console.log('login successful:', response.data);
+    } catch (error) {
+      console.log('login failed:', error);
     }
+  }
   
-    const closeErrorPopup = () => {
-      console.log('close popup')
-      setShowErrorPopup(false);
-    }
-    
-
-
-  return (
-    <div>
-        <div className="login-column">
-            <div className="login-title">
-                Log in
-            </div>
-            <div className="login-input">
-            <input className="login" type="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Username"></input>
-            <input className="login" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password"></input>
-            </div>
-            <div className="login-btn-container">
-                <button onClick={handlelogin} className="login-btn">
-                    Enter
-                </button>
-            </div>
-        </div>
-        <div className="signup-column">
-        <Link to={"/Signup"}>
-              <div className="signup-btn-container">
-              <button className="signup-btn">Create a new account</button>
-              </div>
-            </Link>
-        </div>
+    return (
         <div>
-          {showErrorPopup && <ErrorPopup message={error} onClose={closeErrorPopup} />}
-        </div>
+            <h1 className="login-title">Log in</h1>
+            <input className="login-username" type="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Username"></input>
+            <br />
+            <input className="login-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter Email"></input>
+            <br />
+            <input className="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password"></input>
+            <br />
+            <button onClick={login}>Log in</button> 
     </div>
-  );
-}
-
-export default Login;
+    );
+  }
+  
+  export default Login;
