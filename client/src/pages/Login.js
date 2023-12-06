@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useUser } from "../components/Usercontext";
 import "./Login.css";
-import ErrorPopup from "../components/Errorpopup";
+import ErrorPopup from "../components/ErrorPopup";
 
 function Login() {
   const [username, setUsername] = useState("");
