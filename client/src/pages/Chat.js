@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Chatinterface.css";
+import "./Chat.css";
 import { useUser } from "../components/Usercontext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -31,7 +31,6 @@ function Chat() {
         roomId: roomId,
       });
 
-      
       console.log("Response from server:", response.data);
       console.log(`User ${addUsername} added to Room ${roomId} successfully`);
     } catch (error) {

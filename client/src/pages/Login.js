@@ -13,7 +13,7 @@ function Login() {
   const [error, setError] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const navigate = useNavigate();
-  const { login } = useUser();
+  const { login, setUserId } = useUser();
 
   const handlelogin = async () => {
     try {
@@ -28,7 +28,7 @@ function Login() {
       if (response.data.success) {
         const { userId } = response.data;
         login();
-        //setUserId(userId);
+        setUserId(userId);
         navigate(`/room/${username}/${userId}`);
       } else {
         setError('Invalid username or password');
