@@ -1,12 +1,16 @@
 import React from "react";
 import { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import './Signup.css'
+//import ErrorPopup from "../components/ErrorPopup";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Signup(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [error, setError] = useState('');
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
 
     const createUser = async () => {
         try {
