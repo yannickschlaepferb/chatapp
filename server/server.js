@@ -35,8 +35,6 @@ const pool = mysql.createPool({
   connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT),
 });
 
-
-
 pool.getConnection((err, connection) => {
   if (err) {
     console.error("Error connecting to database: " + err.stack);
