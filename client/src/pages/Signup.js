@@ -14,14 +14,27 @@ function Signup(){
 
     const createUser = async () => {
         try {
-          const response = await axios.post('http://localhost:3000/signup', { username:username, password:password }, { withCredentials: true });
+          if (!username || !password) {
+            setError('Please fill in all fields.');
+            setShowErrorPopup(true);
+            return;
+          }
+    
+          const response = await axios.post('http://localhost:3000/signup', { username, password });
           console.log('user created successfully:', response.data);
-          //setTimeout(() => {
-            //navigate("/vault");
-          //}, 10)
+          setTimeout(() => {
+            navigate("/chat");
+          }, 10);
         } catch (error) {
-          console.log('user creation failed:', error.message);
+          console.log('user creation failed:', error);
+          setError('User creation failed.'); 
+          setShowErrorPopup(true);
         }
+      }
+
+      const closeErrorPopup = () => {
+        console.log('close popup')
+        setShowErrorPopup(false);
       }
 
     return(
@@ -33,6 +46,9 @@ function Signup(){
             <br />
             <br />
             <button className="login-btn" onClick={createUser}>Signup</button>
+            </div>
+            <div>
+                {showErrorPopup && <ErrorPopup message={error} onClose={closeErrorPopup} />}
             </div>
         </div>
     )
