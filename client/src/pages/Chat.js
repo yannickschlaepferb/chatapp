@@ -20,13 +20,13 @@ function Chat() {
       }
 
       const userResponse = await axios.get(
-        `http://localhost:3000/get-user/${addUsername}`
+        `http://localhost:3001/get-user/${addUsername}`
       );
       const userId = userResponse.data.message[0].id;
 
       console.log("Adding user with userId:", userId, "to roomId:", roomId);
 
-      const response = await axios.post("http://localhost:3000/add-user", {
+      const response = await axios.post("http://localhost:3001/add-user", {
         userId: userId,
         roomId: roomId,
       });
@@ -45,7 +45,7 @@ function Chat() {
       }
 
       console.log("Sending message with:", { id, roomId, message });
-      const response = await axios.post("http://localhost:3000/send-message", {
+      const response = await axios.post("http://localhost:3001/send-message", {
         senderId: id,
         roomId: roomId,
         content: message,
@@ -118,7 +118,7 @@ function Chat() {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/get-messages/${roomId}/${id}`
+          `http://localhost:3001/get-messages/${roomId}/${id}`
         );
         setMessages(response.data.messages);
         console.log(response.data);

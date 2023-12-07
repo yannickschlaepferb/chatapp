@@ -4,7 +4,7 @@ import './Signup.css'
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
+ 
 function Room () {
     const [room, setRoom] = useState("");
     const [error, setError] = useState('');
@@ -14,12 +14,12 @@ function Room () {
     const navigate = useNavigate();
     const { username: paramUsername, id: paramId } = useParams();
     const [roomId, setRoomId] = useState(null);
-
+ 
     useEffect(() => {
         setUsername(paramUsername);
         setId(paramId);
     }, [paramUsername, paramId]);
-
+ 
     const createRoom = async() => {
      try {
       if (!room) {
@@ -27,12 +27,12 @@ function Room () {
         setShowErrorPopup(true);
         return;
       }
-
-      const response = await axios.post('http://localhost:3000/room', { id, room });
+ 
+      const response = await axios.post('http://localhost:3001/room', { id, room });
       console.log('Room created successfully:', response.data);
-
+ 
       const newRoomId = response.data.roomId;
-
+ 
       if (newRoomId) {
         setRoomId(newRoomId);
         setTimeout(() => {
@@ -44,29 +44,29 @@ function Room () {
     }
     } catch (error) {
       console.log('room creation failed:', error);
-      setError('room creation failed.'); 
+      setError('room creation failed.');
       setShowErrorPopup(true);
     }}
-
+ 
     const addUsertoRoom = async (roomId) => {
         try {
           if (!roomId) {
             console.error('Room Id not found');
             return;
           }
-      
-          const response = await axios.post('http://localhost:3000/user-room', { id, roomId });
+     
+          const response = await axios.post('http://localhost:3001/user-room', { id, roomId });
           console.log(`${username} added to Room: ${room}, Id: ${roomId}`);
         } catch (error) {
           console.log('Error adding user to room:', error);
         }
       };
-      
+     
     const closeErrorPopup = () => {
         console.log('close popup');
         setShowErrorPopup(false);
       };
-
+ 
     return(
         <div className="room-body">
           <div className="space"></div>
@@ -86,5 +86,5 @@ function Room () {
         </div>
     )
 }
-
+ 
 export default Room;
