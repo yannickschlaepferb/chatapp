@@ -1,79 +1,70 @@
-# Chat App
+# Chatapp
 
-A simple chat application built with React, Node.js, Express, and MySQL.
+This Chat app was created with react, node.js and mysql.
 
-## Table of Contents
+## Available Scripts
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
+In the project directory, you can run:
 
-## Features
+### `yarn start`
 
-- Real-time chat functionality
-- Send messages
-- Receive messages 
-- Add users to chat rooms
-- Create new chat rooms
-- Responsive design for various screen sizes
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Prerequisites
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-Before you begin, ensure you have met the following requirements:
+### `yarn test`
 
-- Node.js and npm installed
-- MySQL database server
-- Docker (optional, for containerized deployment)
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## Installation
+### `yarn build`
 
-1. Clone the repository:
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-   ```bash
-   https://github.com/sujanSaravana/CommunicationsApp.git
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-2. Navigate to the project directory:
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-   ```bash
-   cd CommunicationsApp
+### `yarn eject`
 
-3. Install dependencies for the frontend and backend:
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-   ```bash
-   cd client
-   npm install
-   cd server
-   npm install
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## Configuration
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-1. Set up a MySQL database and configure the connection details in the .env file:
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-   ```bash
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=11223344
-   DB_DATABASE=Chatapp
-   DB_CONNECTION_LIMIT=10
+## Learn More
 
-2. Create an initialization SQL script (e.g., init.sql) to set up your database schema.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## Usage 
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-1. Start the backend server:
+### Code Splitting
 
-   ```bash
-   cd server
-   npm start
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-2. Start the frontend development server:
+### Analyzing the Bundle Size
 
-   ```bash
-   cd client
-   npm start
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-3. Open your browser and visit http://localhost:3000 to use the chat app.
+### Making a Progressive Web App
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `yarn build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
