@@ -1,42 +1,15 @@
-import React, { useState, useEffect } from "react";
-import "./Chat.css";
+import React, { useState, useEffect, useRef } from "react";
 import { useUser } from "../components/Usercontext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 function Chat() {
-  const [leftContainerVisible, setLeftContainerVisible] = useState(true);
+  const messageContainerRef = useRef(null);
   const { loggedIn, logout } = useUser();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const { username, id, roomId, room } = useParams();
-  const [addUsername, setAddUsername] = useState("");
-
-  const addUser = async () => {
-    try {
-      if (!addUsername) {
-        return;
-      }
-
-      const userResponse = await axios.get(
-        `http://localhost:3001/get-user/${addUsername}`
-      );
-      const userId = userResponse.data.message[0].id;
-
-      console.log("Adding user with userId:", userId, "to roomId:", roomId);
-
-      const response = await axios.post("http://localhost:3001/add-user", {
-        userId: userId,
-        roomId: roomId,
-      });
-
-      console.log("Response from server:", response.data);
-      console.log(`User ${addUsername} added to Room ${roomId} successfully`);
-    } catch (error) {
-      console.error("Error adding user:", error);
-    }
-  };
 
   const sendMsg = async () => {
     try {
@@ -58,60 +31,19 @@ function Chat() {
     }
   };
 
-  const [gridStyle, setGridStyle] = useState({
-    display: "grid",
-    gridTemplateColumns: "30% 70%",
-  });
-
-  const handleToggle = () => {
-    setLeftContainerVisible(!leftContainerVisible);
-    if (!leftContainerVisible) {
-      setGridStyle({
-        display: "grid",
-        gridTemplateColumns: "30% 70%",
-      });
-    } else {
-      setGridStyle({
-        display: "grid",
-        gridTemplateColumns: "100%",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setLeftContainerVisible(false);
-
-        setGridStyle({
-          display: "grid",
-          gridTemplateColumns: "100%",
-        });
-      } else {
-        setLeftContainerVisible(true);
-
-        setGridStyle({
-          display: "grid",
-          gridTemplateColumns: "30% 70%",
-        });
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const handlelogout = () => {
     logout();
     setTimeout(() => {
       navigate("/login");
     }, 10);
     console.log("successfully logged out");
+  };
+
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight + 100;
+    }
   };
 
   useEffect(() => {
@@ -135,84 +67,61 @@ function Chat() {
     return () => clearInterval(intervalId);
   }, [roomId]);
 
+  useEffect(()=> {
+    scrollToBottom();
+  }, [messages])
+
   return (
-    <div className="container" style={gridStyle}>
-      {leftContainerVisible && (
-        <div className="left-container">
-          <div className="title-container">
-            <p className="logo">Chat App</p>
-          </div>
-          <div className="user-container">
-            <div className="username">
-              <h3>Username: {username}</h3>
-              <h3>Room : {room}</h3>
-            </div>
-            <div className="add-user-container">
-              <h2 className="add-user-title">Add User to Room</h2>
-              <input
-                className="add-user"
-                value={addUsername}
-                onChange={(e) => setAddUsername(e.target.value)}
-                placeholder="Enter Username"
-              ></input>
-            </div>
-            <div className="add-user-btn-container">
-              <button className="add-user-btn" onClick={addUser}>
-                Add User
-              </button>
-            </div>
-            <div className="line"></div>
-            <div className="create-room-contianer">
-              <h2 className="add-user-title">Create a new Room</h2>
-              <Link to={`/room/${username}/${id}`}>
-                <button className="create-room">Create Room</button>
-              </Link>
-            </div>
-            <div className="line"></div>
-          </div>
+    <div className=" h-screen w-screen flex flex-col jusitfy-center items-center gap-5 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 text-white">
+      <div className=" h-1 w-full flex flex-row justify-between items-center p-10 text-2xl border-b-2 border-b-white font-bold ">
+        <div className="">
+          <h3>Username: {username}</h3>
+          <h3>Room : {room}</h3>
         </div>
-      )}
-      <div className="right-container">
-        <div className="logout-container">
-          {window.innerWidth <= 768 && (
-            <div>
-              <input
-                onClick={handleToggle}
-                className="toggle-btn"
-                type="checkbox"
-                id="checkbox"
-              />
-              <label htmlFor="checkbox" className="toggle">
-                <div className="bars" id="bar1"></div>
-                <div className="bars" id="bar2"></div>
-                <div className="bars" id="bar3"></div>
-              </label>
-            </div>
-          )}
-          <button className="logout-btn" onClick={handlelogout}>
-            logout
-          </button>
+        <div className=" rounded bg-opacity-50 bg-white p-4 hover:bg-blue-400 hover:shadow hover:shadow-black hover:shadow-md">
+          <Link to={`/room/${username}/${id}`}>
+            <button className="create-room">Create Room</button>
+          </Link>
         </div>
-        <div className="messages-container" >
+
+        <div className=" rounded bg-opacity-50 bg-white p-4 hover:bg-blue-400 hover:shadow hover:shadow-black hover:shadow-md">
+          <button onClick={handlelogout}>Logout</button>
+        </div>
+      </div>
+
+      <div className=" max-h-[80%] min-h-[80%] w-1/3 sm:w-2/3 flex justify-start items-center gap-2 bg-[#292929] shadow shadow-black shadow-lg rounded mb-8 flex-col ">
+        <div className="flex-grow flex flex-col gap-4 w-full h-[calc(100%-2rem)] max-h-[calc(100%-4rem)] overflow-auto justify-start p-2 scrollbar scrollbar-thumb-slate-500 scrollbar-track-transparent scrollbar-thumb-rounded-full scrollbar-track-rounded-full"
+            ref={messageContainerRef}>
           {messages.map((message) => (
-            <div key={message.id} className={message.senderId.toString() === id ? "sent-message" : "received-message"} >
+            <div
+              key={message.id}
+              className={
+                message.senderId.toString() === id
+                  ? "bg-green-500 px-2 py-2 rounded self-end text-black"
+                  : "bg-white px-2 py-2 rounded self-start text-black"
+              }
+            >
               <p>{message.content}</p>
             </div>
           ))}
         </div>
-
-        <div className="input-container">
+        <div className="flex flex-row gap-2 h-8 text-black ">
           <input
-            className="msg-input"
+            className=" rounded px-5 outline-none focus:bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 focus:placeholder-black placeholder-black"
             name="text"
             placeholder="Type something..."
             type="search"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <button className="send-btn" onClick={sendMsg}>
-            Send
-          </button>
+          <div className=" h-full rounded px-3 bg-green-400 text-center ">
+            <button
+              className=" h-full flex items-center justify-center"
+              onClick={sendMsg}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

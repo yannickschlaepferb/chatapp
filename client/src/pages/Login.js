@@ -1,10 +1,9 @@
 import React from "react";
-import { useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useUser } from "../components/Usercontext";
-import "./Login.css";
 import ErrorPopup from "../components/ErrorPopup";
 
 function Login() {
@@ -17,42 +16,46 @@ function Login() {
 
   const handlelogin = async () => {
     try {
-      if (!username || !password){
-        setError('Please fill in all fields')
+      if (!username || !password) {
+        setError("Please fill in all fields");
         setShowErrorPopup(true);
         return;
       }
-      const response = await axios.post('http://localhost:3001/login', { username, password }, { withCredentials: true });
-      
+      const response = await axios.post(
+        "http://localhost:3001/login",
+        { username, password },
+        { withCredentials: true }
+      );
+
       if (response.data.success) {
-        console.log('login successful:', response.data);
+        console.log("login successful:", response.data);
         const { userId } = response.data;
         login();
         setUserId(userId);
         navigate(`/room/${username}/${userId}`);
       } else {
-        setError('Invalid username or password');
+        setError("Invalid username or password");
         setShowErrorPopup(true);
       }
     } catch (error) {
-      console.error('Login failed:', error);
-      setError('Login failed');
+      console.error("Login failed:", error);
+      setError("Login failed");
       setShowErrorPopup(true);
     }
   };
 
   const closeErrorPopup = () => {
-    console.log('close popup')
+    console.log("close popup");
     setShowErrorPopup(false);
-  }
+  };
 
   return (
-    <div>
-      <div className="login-column">
-        <div className="login-title">Log in</div>
-        <div className="login-input">
+    <div className="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 text-white text-2xl text-center">
+      <div className=" flex flex-col gap-5">
+        <div className="font-bold text-5xl">Login</div>
+        <div className="flex flex-col gap-2 rounded  ">
           <input
-            className="login"
+            className="px-5 outline-none rounded text-black "
             type="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -60,25 +63,24 @@ function Login() {
             placeholder="Enter Username"
           />
           <input
-            className="login"
+            className="px-5 outline-none rounded text-black "
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handlelogin()}
             placeholder="Enter Password"
           />
-        </div>
-        <div className="login-btn-container">
-          <button onClick={handlelogin} className="login-btn">
-            log in
-          </button>
+          <div className=" rounded bg-opacity-50 bg-white py-1 hover:bg-blue-400 hover:shadow hover:shadow-black hover:shadow-md">
+            <button onClick={handlelogin} className="login-btn">
+              log in
+            </button>
+          </div>
         </div>
       </div>
-      <div className="signup-column">
+      <div className=" absolute bottom-40">
+        <p>Don't have an account?{" "}</p>
         <Link to={"/Signup"}>
-          <div className="signup-btn-container">
-            <button className="signup-btn">Create a new account</button>
-          </div>
+            <button className="hover:border-b-2 border-b-blue-600 hover:font-bold" >Register</button>
         </Link>
       </div>
       <div>
