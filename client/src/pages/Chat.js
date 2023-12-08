@@ -80,7 +80,7 @@ function Chat() {
         </div>
         <div className=" rounded bg-opacity-50 bg-white p-4 hover:bg-blue-400 hover:shadow hover:shadow-black hover:shadow-md">
           <Link to={`/room/${username}/${id}`}>
-            <button className="create-room">Create Room</button>
+            <button className="create-room">Create / Join Room</button>
           </Link>
         </div>
 

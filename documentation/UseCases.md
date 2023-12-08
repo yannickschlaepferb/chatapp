@@ -17,12 +17,14 @@
   - User provides login credentials.
   - System validates credentials against the MySQL database.
 
-## User Logout
+##  Writing Messages
 
 - **Actor:** User
-- **Description:** Users can log out of the chat app.
+- **Description:** Users can view their received messages in a room.
 - **Actions:**
-  - User initiates the logout process.
+
+  - User accesses the room.
+  - Messages are retrieved from the database based on the user's ID.
 
 ## Sending Messages
 
@@ -32,22 +34,6 @@
   - User composes a message.
   - Messages are stored in the MySQL database with senderId, roomId, content, and timestamp information.
 
-## Reading Messages
-
-- **Actor:** User
-- **Description:** Users can view their received messages in a room.
-- **Actions:**
-  - User accesses the room.
-  - Messages are retrieved from the database based on the user's ID.
-
-## Joining Rooms
-
-- **Actor:** User
-- **Description:** Users can join existing chat rooms.
-- **Actions:**
-  - User selects a chat room to join.
-  - The system checks if the room exists and adds the user to the room in the database.
-
 ## Creating Rooms
 
 - **Actor:** User
@@ -56,17 +42,10 @@
   - User initiates the room creation process.
   - Room information is stored in the MySQL database.
 
-## Adding Users to a Room
+## Joining Rooms
 
 - **Actor:** User
-- **Description:** User can add other users to a chat room.
+- **Description:** Users can join existing chat rooms.
 - **Actions:**
-  - User selects users to add to the room.
-  - The system updates the database to reflect the new members of the room.
-
-## Real-time Updates
-
-- **Actor:** Client
-- **Description:** The chat app fetches Messages every 10ms.
-- **Actions:**
-  - Implement real-time communication to ensure instant notifications without manual page refresh.
+  - User selects a chat room to join.
+  - The system checks if the room exists and adds the user to the room in the database.
